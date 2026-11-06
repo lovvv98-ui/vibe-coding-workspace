@@ -1,0 +1,9 @@
+node_modules/
+work/
+apps/web/dist/
+apps/extension/vibe-coding-workspace-extension.zip
+outputs/vibe-coding-workspace-source.zip
+outputs/vibe-coding-workspace-extension.zip
+*.log
+.DS_Store
+Thumbs.db

@@ -1,0 +1,79 @@
+[
+  {
+    "id": "chatgpt",
+    "name": "ChatGPT",
+    "url": "https://chatgpt.com/",
+    "description": "아이디어 기획, 요구사항 정리, 프롬프트 작성",
+    "icon": "G",
+    "color": "#16a37f",
+    "kind": "chatgpt",
+    "enabled": true,
+    "builtIn": true
+  },
+  {
+    "id": "codex",
+    "name": "Codex",
+    "url": "https://chatgpt.com/codex",
+    "description": "GitHub 저장소 기반 클라우드 코딩",
+    "icon": "CX",
+    "color": "#303030",
+    "kind": "codex",
+    "enabled": true,
+    "builtIn": true
+  },
+  {
+    "id": "lovable",
+    "name": "Lovable",
+    "url": "https://lovable.dev/",
+    "description": "AI 웹사이트 시안 및 구현",
+    "icon": "L",
+    "color": "#ec6c9a",
+    "kind": "domain",
+    "enabled": true,
+    "builtIn": true
+  },
+  {
+    "id": "github",
+    "name": "GitHub",
+    "url": "https://github.com/",
+    "description": "소스코드 저장과 버전 관리",
+    "icon": "GH",
+    "color": "#24292f",
+    "kind": "domain",
+    "enabled": true,
+    "builtIn": true
+  },
+  {
+    "id": "cursor",
+    "name": "Cursor",
+    "url": "https://cursor.com/agents",
+    "description": "브라우저 기반 AI 코딩 에이전트",
+    "icon": "C",
+    "color": "#59636e",
+    "kind": "domain",
+    "enabled": true,
+    "builtIn": true
+  },
+  {
+    "id": "vercel",
+    "name": "Vercel",
+    "url": "https://vercel.com/dashboard",
+    "description": "웹사이트 배포 및 운영",
+    "icon": "▲",
+    "color": "#171717",
+    "kind": "domain",
+    "enabled": true,
+    "builtIn": true
+  },
+  {
+    "id": "infinityfree",
+    "name": "InfinityFree",
+    "url": "https://dash.infinityfree.com/",
+    "description": "무료 웹호스팅 관리",
+    "icon": "IF",
+    "color": "#428bca",
+    "kind": "domain",
+    "enabled": true,
+    "builtIn": true
+  }
+]

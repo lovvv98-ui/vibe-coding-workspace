@@ -1,0 +1,11 @@
+{
+  "name": "vibe-coding-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A Korean education workspace dashboard and Chrome/Edge tab-switching extension.",
+  "scripts": {
+    "build:web": "node scripts/build-web.mjs",
+    "package:extension": "node scripts/package-extension.mjs",
+    "build": "npm run build:web && npm run package:extension"
+  }
+}

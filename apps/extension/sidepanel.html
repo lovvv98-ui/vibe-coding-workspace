@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light">
+    <title>VIBE CODING WORKSPACE</title>
+    <link rel="stylesheet" href="sidepanel.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#main" aria-label="VIBE CODING WORKSPACE 홈">
+          <span class="brand-mark" aria-hidden="true">V</span>
+          <span class="brand-copy"><strong>VIBE CODING</strong><small>WORKSPACE</small></span>
+        </a>
+        <button class="icon-button" id="settings-button" type="button" aria-label="서비스 설정" title="서비스 설정">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z"/><path d="m19.4 15 .1.1 1.1.9-1.4 2.4-1.4-.5-.2-.1c-.5.4-1 .7-1.6.9l-.3 1.5h-2.8l-.3-1.5a7 7 0 0 1-1.8-.7l-1.3.8-2-2 .8-1.3a7 7 0 0 1-.7-1.8l-1.5-.3v-2.8l1.5-.3c.2-.6.4-1.1.7-1.6l-.8-1.4 2-2 1.3.8a7 7 0 0 1 1.8-.7l.3-1.5h2.8l.3 1.5c.6.2 1.1.4 1.6.7l1.4-.8 2 2-.8 1.3c.3.5.6 1.1.7 1.7l1.5.3v2.8l-1.5.3a7 7 0 0 1-.7 1.3Z"/></svg>
+        </button>
+      </header>
+
+      <main id="main">
+        <section class="welcome-card">
+          <div class="welcome-label"><span class="live-dot"></span> <span id="browser-label">브라우저 작업공간</span></div>
+          <h1>수업 도구를<br>한 번에 전환하세요</h1>
+          <p>열려 있는 탭을 다시 사용해 작업 흐름을 이어갑니다.</p>
+          <button class="prepare-button" id="prepare-button" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v3m0 12v3M3 12h3m12 0h3M5.6 5.6l2.1 2.1m8.6 8.6 2.1 2.1m0-12.8-2.1 2.1m-8.6 8.6-2.1 2.1"/><circle cx="12" cy="12" r="5"/></svg>
+            교육 시작 전 탭 준비
+          </button>
+        </section>
+
+        <section class="service-section" aria-labelledby="services-heading">
+          <div class="section-heading"><div><h2 id="services-heading">수업 도구</h2><p>선택하면 기존 서비스 탭으로 이동합니다</p></div><span class="tool-count" id="tool-count">7</span></div>
+          <div class="service-list" id="service-list" aria-live="polite">
+            <div class="loading-state">서비스 목록을 불러오는 중…</div>
+          </div>
+        </section>
+
+        <div class="notice" id="notice" role="status" aria-live="polite" hidden></div>
+      </main>
+
+      <footer class="footer">
+        <button class="footer-link" id="help-button" type="button"><span class="help-mark">?</span> 사용 안내</button>
+        <span class="privacy-label"><span aria-hidden="true">◈</span> 로그인 정보는 저장하지 않아요</span>
+      </footer>
+    </div>
+
+    <dialog class="choice-dialog" id="tab-dialog" aria-labelledby="dialog-title">
+      <form method="dialog" class="dialog-content">
+        <button class="dialog-close" value="cancel" aria-label="닫기">×</button>
+        <p class="eyebrow">열린 탭이 여러 개예요</p>
+        <h2 id="dialog-title">사용할 탭을 선택하세요</h2>
+        <p class="dialog-description" id="dialog-description"></p>
+        <div class="candidate-list" id="candidate-list"></div>
+        <div class="dialog-actions"><button class="text-button" value="cancel">닫기</button></div>
+      </form>
+    </dialog>
+
+    <dialog class="choice-dialog" id="missing-dialog" aria-labelledby="missing-title">
+      <form method="dialog" class="dialog-content">
+        <button class="dialog-close" value="cancel" aria-label="닫기">×</button>
+        <p class="eyebrow">아직 연결된 탭이 없어요</p>
+        <h2 id="missing-title">서비스 탭을 열까요?</h2>
+        <p class="dialog-description" id="missing-description">새 탭을 열면 서비스 화면에서 직접 로그인할 수 있습니다.</p>
+        <div class="dialog-actions"><button class="text-button" value="cancel">취소</button><button class="primary-button" id="open-missing-button" type="button">새 탭 열기</button></div>
+      </form>
+    </dialog>
+
+    <script src="sidepanel.js"></script>
+  </body>
+</html>
