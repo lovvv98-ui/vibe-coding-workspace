@@ -3,6 +3,7 @@
 const SERVICES_KEY = "services";
 const TABS_KEY = "serviceTabs";
 const SELECTED_KEY = "selectedServiceId";
+const pendingCreations = new Map();
 
 async function getDefaults() {
   const response = await fetch(chrome.runtime.getURL("data/tools.json"));
@@ -32,7 +33,8 @@ function isCodexPath(pathname) {
 
 function matchesService(service, tab) {
   const target = getUrlKind(service.url);
-  const actual = getUrlKind(tab?.url || "");
+  // A newly-created tab may expose pendingUrl before url while navigation starts.
+  const actual = getUrlKind(tab?.url || tab?.pendingUrl || "");
   if (!target || !actual || target.hostname.toLowerCase() !== actual.hostname.toLowerCase()) return false;
 
   if ((service.id === "codex" || service.kind === "codex") && target.hostname.toLowerCase() === "chatgpt.com") {
@@ -61,8 +63,8 @@ async function findMatches(service) {
 function tabChoice(tab) {
   return {
     id: tab.id,
-    title: (tab.title || tab.url || "열린 탭").slice(0, 100),
-    url: tab.url || ""
+    title: (tab.title || tab.url || tab.pendingUrl || "열린 탭").slice(0, 100),
+    url: tab.url || tab.pendingUrl || ""
   };
 }
 
@@ -159,16 +161,44 @@ async function chooseServiceTab(serviceId, tabId, shouldFocus) {
   return { kind: "opened", tabId: tab.id };
 }
 
-async function createServiceTab(serviceId, active) {
+async function createServiceTabOnce(serviceId, active) {
   const services = await getServices();
   const service = services.find((item) => item.id === serviceId && item.enabled);
   if (!service) return { kind: "error", message: "사용할 수 없는 서비스입니다." };
+
+  // Recheck immediately before creating. The tab may have been opened by another
+  // panel action since the user first saw the "tab missing" prompt.
+  const matches = await findMatches(service);
+  if (matches.length === 1) {
+    const tabMap = await getTabMap();
+    tabMap[service.id] = matches[0].id;
+    await saveTabMap(tabMap);
+    await chrome.storage.local.set({ [SELECTED_KEY]: service.id });
+    await focusTab(matches[0]);
+    return { kind: "opened", tabId: matches[0].id };
+  }
+  if (matches.length > 1) {
+    return { kind: "choose", serviceId, candidates: matches.map(tabChoice) };
+  }
+
   const tab = await chrome.tabs.create({ url: service.url, active });
   const tabMap = await getTabMap();
   tabMap[service.id] = tab.id;
   await saveTabMap(tabMap);
   await chrome.storage.local.set({ [SELECTED_KEY]: service.id });
   return { kind: "opened", tabId: tab.id };
+}
+
+async function createServiceTab(serviceId, active) {
+  // Prevent rapid repeated clicks from creating multiple tabs for one service.
+  if (pendingCreations.has(serviceId)) return pendingCreations.get(serviceId);
+  const creation = createServiceTabOnce(serviceId, active);
+  pendingCreations.set(serviceId, creation);
+  try {
+    return await creation;
+  } finally {
+    if (pendingCreations.get(serviceId) === creation) pendingCreations.delete(serviceId);
+  }
 }
 
 async function prepareAllTabs() {

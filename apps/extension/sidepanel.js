@@ -55,6 +55,8 @@ function render() {
     button.className = `service-item${currentState.selectedServiceId === service.id ? " selected" : ""}`;
     button.dataset.serviceId = service.id;
     button.setAttribute("aria-current", currentState.selectedServiceId === service.id ? "true" : "false");
+    button.setAttribute("aria-label", `${service.name}. ${presentation.label}. ${presentation.detail}`);
+    button.title = `${presentation.label} · ${presentation.detail}`;
     button.innerHTML = `<span class="service-icon icon-${safeId(service.id)}">${escapeHtml(service.icon || service.name.slice(0, 2))}</span><span class="service-copy"><strong>${escapeHtml(service.name)}</strong><small>${escapeHtml(service.description || "웹 서비스")}</small></span><span class="service-status ${presentation.state}"><span class="status-dot"></span>${presentation.label}</span><span class="service-chevron" aria-hidden="true">›</span>`;
     button.addEventListener("click", () => openService(service));
     listElement.append(button);
