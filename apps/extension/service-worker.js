@@ -139,10 +139,6 @@ async function activateService(serviceId) {
   return { kind: "navigated", tabId: navigated.id, serviceId: service.id };
 }
 
-async function startWorkspace() {
-  return activateService("chatgpt");
-}
-
 async function rememberActiveNavigation(tabId, changeInfo, tab) {
   if (!tab?.active || (!changeInfo.url && changeInfo.status !== "complete")) return;
   try {
@@ -169,7 +165,6 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     switch (message?.type) {
       case "get-state": return getServiceState();
       case "activate-service": return activateService(message.serviceId);
-      case "start-workspace": return startWorkspace();
       default: return { kind: "error", message: "지원하지 않는 요청입니다." };
     }
   };

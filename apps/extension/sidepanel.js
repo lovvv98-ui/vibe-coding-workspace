@@ -7,7 +7,6 @@ let currentState = null;
 let noticeTimer = null;
 
 const browserName = /Edg\//.test(navigator.userAgent) ? "Microsoft Edge" : /Chrome\//.test(navigator.userAgent) ? "Google Chrome" : "브라우저";
-document.getElementById("browser-label").textContent = `${browserName} · 한 창 작업공간`;
 
 async function request(type, data = {}) {
   return chrome.runtime.sendMessage({ type, ...data });
@@ -44,7 +43,7 @@ function render() {
   const selectedService = currentState.services.find((service) => service.id === currentState.selectedServiceId);
   document.getElementById("browser-label").textContent = selectedService
     ? `${browserName} · ${selectedService.name} 화면`
-    : `${browserName} · 한 창 작업공간`;
+    : `${browserName} · 작업 화면`;
   document.getElementById("tool-count").textContent = String(services.length).padStart(2, "0");
   listElement.replaceChildren();
 
@@ -65,7 +64,7 @@ function render() {
     button.setAttribute("aria-current", currentState.selectedServiceId === service.id ? "true" : "false");
     button.setAttribute("aria-label", `${service.name}. ${presentation.label}. ${presentation.detail}`);
     button.title = `${presentation.label} · ${presentation.detail}`;
-    button.innerHTML = `<span class="service-icon icon-${safeId(service.id)}">${escapeHtml(service.icon || service.name.slice(0, 2))}</span><span class="service-copy"><strong>${escapeHtml(service.name)}</strong><small>${escapeHtml(service.description || "웹 서비스")}</small></span><span class="service-status ${presentation.state}"><span class="status-dot"></span>${presentation.label}</span><span class="service-chevron" aria-hidden="true">›</span>`;
+    button.innerHTML = `<span class="service-icon icon-${safeId(service.id)}">${escapeHtml(service.icon || service.name.slice(0, 2))}</span><span class="service-copy"><strong>${escapeHtml(service.name)}</strong></span><span class="service-status ${presentation.state}"><span class="status-dot"></span>${presentation.label}</span><span class="service-chevron" aria-hidden="true">›</span>`;
     button.addEventListener("click", () => openService(service));
     listElement.append(button);
   }
@@ -92,31 +91,6 @@ async function openService(service) {
     showNotice(result.message || "서비스 화면을 전환하지 못했어요.", "error");
   }
 }
-
-document.getElementById("prepare-button").addEventListener("click", async (event) => {
-  const button = event.currentTarget;
-  button.disabled = true;
-  button.classList.add("busy");
-  button.setAttribute("aria-busy", "true");
-  try {
-    const result = await request("start-workspace");
-    if (result.kind === "navigated") {
-      if (currentState) currentState.selectedServiceId = "chatgpt";
-      render();
-      showNotice("ChatGPT를 현재 작업 탭에서 열었습니다. 서비스별 새 탭은 만들지 않아요.", "success");
-    } else if (result.kind === "already-active") {
-      showNotice("ChatGPT가 이미 현재 작업 화면입니다.");
-    } else {
-      showNotice(result.message || "작업공간을 시작하지 못했어요.", "error");
-    }
-  } catch (error) {
-    showNotice(error.message || "작업공간을 시작하지 못했어요.", "error");
-  } finally {
-    button.disabled = false;
-    button.classList.remove("busy");
-    button.removeAttribute("aria-busy");
-  }
-});
 
 document.getElementById("settings-button").addEventListener("click", () => chrome.runtime.openOptionsPage());
 document.getElementById("help-button").addEventListener("click", () => helpDialog.showModal());

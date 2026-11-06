@@ -165,18 +165,6 @@ test("clicking the currently active service does not reload or navigate it", asy
   assert.equal(state.tabs.length, 1);
 });
 
-test("start button opens ChatGPT in the existing active tab", async () => {
-  const { state, send } = createHarness({ tabs: [
-    { id: 17, windowId: 1, url: "https://example.com/lesson", active: true }
-  ] });
-  const result = await send({ type: "start-workspace" });
-  assert.equal(result.kind, "navigated");
-  assert.equal(result.tabId, 17);
-  assert.equal(state.tabs.length, 1);
-  assert.equal(state.created.length, 0);
-  assert.equal(state.tabs[0].url, "https://chatgpt.com/");
-});
-
 test("service state shows current, remembered, and not-yet-visited tools", async () => {
   const { send } = createHarness({
     tabs: [{ id: 9, windowId: 1, url: "https://lovable.dev/projects/lesson", active: true }],
@@ -191,6 +179,8 @@ test("service state shows current, remembered, and not-yet-visited tools", async
 
 test("workspace UI has no iframe and does not create a tab for service selection", async () => {
   assert.doesNotMatch(sidepanelHtml, /<iframe\b/i);
+  assert.doesNotMatch(sidepanelHtml, /welcome-card|prepare-button|ChatGPT에서 시작/);
+  assert.doesNotMatch(sidepanelSource, /service\.description/);
   assert.doesNotMatch(workerSource, /chrome\.tabs\.create\s*\(/);
   assert.doesNotMatch(workerSource, /chrome\.tabs\.reload\s*\(/);
   assert.doesNotMatch(workerSource, /chrome\.cookies|browser\.cookies/);
