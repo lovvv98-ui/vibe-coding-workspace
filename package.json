@@ -6,7 +6,8 @@
   "scripts": {
     "build:web": "node scripts/build-web.mjs",
     "package:extension": "node scripts/package-extension.mjs",
-    "test:extension": "node --test tests/extension-service-worker.test.mjs",
+    "test:extension": "node tests/extension-service-worker.test.mjs",
     "build": "npm run build:web && npm run package:extension"
   }
 }
+
