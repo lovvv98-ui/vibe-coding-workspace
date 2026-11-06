@@ -127,13 +127,13 @@ async function moveService(index, offset) {
 }
 
 async function deleteService(service) {
-  if (!confirm(`“${service.name}” 서비스를 목록에서 삭제할까요? 이미 열린 웹 탭은 닫히지 않습니다.`)) return;
+  if (!confirm(`“${service.name}” 서비스를 목록에서 삭제할까요? 저장된 마지막 방문 주소도 목록에서 지웁니다.`)) return;
   const next = services.filter((item) => item.id !== service.id);
   await saveServices(next);
-  const stored = await chrome.storage.local.get("serviceTabs");
-  const tabMap = { ...(stored.serviceTabs || {}) };
-  delete tabMap[service.id];
-  await chrome.storage.local.set({ serviceTabs: tabMap });
+  const stored = await chrome.storage.local.get("serviceUrls");
+  const savedUrls = { ...(stored.serviceUrls || {}) };
+  delete savedUrls[service.id];
+  await chrome.storage.local.set({ serviceUrls: savedUrls });
   const selected = await chrome.storage.local.get("selectedServiceId");
   if (selected.selectedServiceId === service.id) await chrome.storage.local.set({ selectedServiceId: null });
   await removeOldPermission(service.url, next);
@@ -159,12 +159,12 @@ document.getElementById("restore-button").addEventListener("click", async () => 
   if (!confirm("기본 7개 서비스를 순서대로 복원할까요? 현재 이름과 URL 변경, 추가 서비스는 사라집니다.")) return;
   const builtIns = await defaults();
   await saveServices(builtIns);
-  const stored = await chrome.storage.local.get("serviceTabs");
+  const stored = await chrome.storage.local.get("serviceUrls");
   const ids = new Set(builtIns.map((item) => item.id));
-  const tabMap = Object.fromEntries(Object.entries(stored.serviceTabs || {}).filter(([id]) => ids.has(id)));
+  const savedUrls = Object.fromEntries(Object.entries(stored.serviceUrls || {}).filter(([id]) => ids.has(id)));
   const selected = await chrome.storage.local.get("selectedServiceId");
   await chrome.storage.local.set({
-    serviceTabs: tabMap,
+    serviceUrls: savedUrls,
     selectedServiceId: ids.has(selected.selectedServiceId) ? selected.selectedServiceId : null
   });
   showToast("기본 서비스 7개를 복원했습니다.");

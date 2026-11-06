@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "VIBE CODING WORKSPACE",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "바이브코딩 수업에 필요한 웹 도구 탭을 한곳에서 관리하고 전환합니다.",
   "permissions": ["sidePanel", "tabs", "storage"],
   "host_permissions": [
