@@ -11,17 +11,6 @@
     "builtIn": true
   },
   {
-    "id": "codex",
-    "name": "Codex",
-    "url": "https://chatgpt.com/codex",
-    "description": "GitHub 저장소 기반 클라우드 코딩",
-    "icon": "CX",
-    "color": "#303030",
-    "kind": "codex",
-    "enabled": true,
-    "builtIn": true
-  },
-  {
     "id": "lovable",
     "name": "Lovable",
     "url": "https://lovable.dev/",
@@ -77,3 +66,4 @@
     "builtIn": true
   }
 ]
+

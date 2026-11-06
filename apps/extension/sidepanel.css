@@ -38,7 +38,6 @@ main { flex: 1; padding: 10px 10px 12px; }
 .service-item.selected { border-color: #7cb899; background: #f1f8f3; box-shadow: inset 3px 0 0 #31875f; }
 .service-icon { width: 29px; height: 29px; display: grid; place-items: center; border-radius: 8px; background: #586b61; color: #fff; font: 700 10px/1 "Manrope", sans-serif; letter-spacing: -.02em; }
 .service-icon.icon-chatgpt { background: #168b73; }
-.service-icon.icon-codex { background: #313836; }
 .service-icon.icon-lovable { background: #e77b9a; }
 .service-icon.icon-github { background: #252b2e; }
 .service-icon.icon-cursor { background: #65727c; }
@@ -85,3 +84,4 @@ main { flex: 1; padding: 10px 10px 12px; }
   .service-icon { width: 26px; height: 26px; }
   .service-status { font-size: 6px; }
 }
+

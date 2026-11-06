@@ -11,9 +11,25 @@ async function getDefaults() {
 }
 
 async function getServices() {
-  const stored = await chrome.storage.local.get(SERVICES_KEY);
-  if (Array.isArray(stored[SERVICES_KEY])) return stored[SERVICES_KEY];
-  return getDefaults();
+  const stored = await chrome.storage.local.get([SERVICES_KEY, SERVICE_URLS_KEY, SELECTED_KEY]);
+  const services = Array.isArray(stored[SERVICES_KEY]) ? stored[SERVICES_KEY] : await getDefaults();
+  const currentServices = services.filter((service) => service?.id !== "codex" && service?.kind !== "codex");
+  const updates = {};
+
+  if (Array.isArray(stored[SERVICES_KEY]) && currentServices.length !== services.length) {
+    updates[SERVICES_KEY] = currentServices;
+  }
+
+  const savedUrls = stored[SERVICE_URLS_KEY];
+  if (savedUrls && typeof savedUrls === "object" && !Array.isArray(savedUrls) && "codex" in savedUrls) {
+    const currentUrls = { ...savedUrls };
+    delete currentUrls.codex;
+    updates[SERVICE_URLS_KEY] = currentUrls;
+  }
+
+  if (stored[SELECTED_KEY] === "codex") updates[SELECTED_KEY] = null;
+  if (Object.keys(updates).length) await chrome.storage.local.set(updates);
+  return currentServices;
 }
 
 function parseWebUrl(url) {
@@ -26,21 +42,14 @@ function parseWebUrl(url) {
   }
 }
 
-function isCodexPath(pathname) {
-  return pathname === "/codex" || pathname.startsWith("/codex/");
-}
-
 function matchesService(service, rawUrl) {
   const target = parseWebUrl(service.url);
   const actual = parseWebUrl(typeof rawUrl === "string" ? rawUrl : rawUrl?.url || rawUrl?.pendingUrl || "");
   if (!target || !actual || target.hostname.toLowerCase() !== actual.hostname.toLowerCase()) return false;
 
-  if ((service.id === "codex" || service.kind === "codex") && target.hostname.toLowerCase() === "chatgpt.com") {
-    return isCodexPath(actual.pathname);
-  }
-  if ((service.id === "chatgpt" || service.kind === "chatgpt") && target.hostname.toLowerCase() === "chatgpt.com") {
-    return !isCodexPath(actual.pathname);
-  }
+  if (service.id === "chatgpt" && target.hostname.toLowerCase() === "chatgpt.com" &&
+      (actual.pathname === "/codex" || actual.pathname.startsWith("/codex/"))) return false;
+
   return true;
 }
 
@@ -153,6 +162,7 @@ async function rememberActiveNavigation(tabId, changeInfo, tab) {
 }
 
 chrome.runtime.onInstalled.addListener(() => {
+  getServices().catch(() => {});
   if (!chrome.sidePanel) return;
   chrome.sidePanel.setOptions({ path: "sidepanel.html", enabled: true }).catch(() => {});
   chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }).catch(() => {});
@@ -171,3 +181,4 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   run().then(sendResponse).catch((error) => sendResponse({ kind: "error", message: error?.message || "작업을 완료하지 못했습니다." }));
   return true;
 });
+

@@ -156,7 +156,7 @@ document.getElementById("add-form").addEventListener("submit", async (event) => 
 });
 
 document.getElementById("restore-button").addEventListener("click", async () => {
-  if (!confirm("기본 7개 서비스를 순서대로 복원할까요? 현재 이름과 URL 변경, 추가 서비스는 사라집니다.")) return;
+  if (!confirm("기본 6개 서비스를 순서대로 복원할까요? 현재 이름과 URL 변경, 추가 서비스는 사라집니다.")) return;
   const builtIns = await defaults();
   await saveServices(builtIns);
   const stored = await chrome.storage.local.get("serviceUrls");
@@ -167,7 +167,8 @@ document.getElementById("restore-button").addEventListener("click", async () => 
     serviceUrls: savedUrls,
     selectedServiceId: ids.has(selected.selectedServiceId) ? selected.selectedServiceId : null
   });
-  showToast("기본 서비스 7개를 복원했습니다.");
+  showToast("기본 서비스 6개를 복원했습니다.");
 });
 
 loadServices().catch((error) => showToast(error.message || "설정을 불러오지 못했습니다.", "error"));
+

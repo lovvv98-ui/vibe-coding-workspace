@@ -112,10 +112,11 @@ function createHarness({ tabs = [], storage = {} } = {}) {
   return { state, send };
 }
 
-test("default menu puts Codex directly below ChatGPT and uses MV3 Side Panel", async () => {
+test("default menu contains six tools without Codex and uses MV3 Side Panel", async () => {
   assert.deepEqual(defaults.map((service) => service.id), [
-    "chatgpt", "codex", "lovable", "github", "cursor", "vercel", "infinityfree"
+    "chatgpt", "lovable", "github", "cursor", "vercel", "infinityfree"
   ]);
+  assert.ok(!defaults.some((service) => service.id === "codex" || service.kind === "codex"));
   const manifest = JSON.parse(await readFile(resolve(root, "apps/extension/manifest.json"), "utf8"));
   assert.equal(manifest.manifest_version, 3);
   assert.equal(manifest.side_panel.default_path, "sidepanel.html");
@@ -124,32 +125,71 @@ test("default menu puts Codex directly below ChatGPT and uses MV3 Side Panel", a
   assert.ok(manifest.permissions.includes("storage"));
 });
 
-test("one active browser tab moves between ChatGPT and Codex and remembers each path", async () => {
+test("one active browser tab moves between ChatGPT and Lovable and remembers each path", async () => {
   const { state, send } = createHarness({ tabs: [
     { id: 42, windowId: 1, url: "https://chatgpt.com/c/class-chat?draft=temporary#private", active: true }
   ] });
 
-  const toCodex = await send({ type: "activate-service", serviceId: "codex" });
-  assert.equal(toCodex.kind, "navigated");
-  assert.equal(toCodex.tabId, 42);
+  const toLovable = await send({ type: "activate-service", serviceId: "lovable" });
+  assert.equal(toLovable.kind, "navigated");
+  assert.equal(toLovable.tabId, 42);
   assert.equal(state.tabs.length, 1);
   assert.equal(state.created.length, 0);
   assert.equal(state.storage.serviceUrls.chatgpt, "https://chatgpt.com/c/class-chat");
-  assert.equal(state.tabs[0].url, "https://chatgpt.com/codex");
+  assert.equal(state.tabs[0].url, "https://lovable.dev/");
 
-  state.tabs[0].url = "https://chatgpt.com/codex/workspace-7?token=temporary#private";
+  state.tabs[0].url = "https://lovable.dev/projects/lesson?token=temporary#private";
   await send({ type: "get-state" });
-  assert.equal(state.storage.serviceUrls.codex, "https://chatgpt.com/codex/workspace-7");
+  assert.equal(state.storage.serviceUrls.lovable, "https://lovable.dev/projects/lesson");
 
   const toChatGPT = await send({ type: "activate-service", serviceId: "chatgpt" });
   assert.equal(toChatGPT.kind, "navigated");
   assert.equal(toChatGPT.tabId, 42);
   assert.equal(state.tabs[0].url, "https://chatgpt.com/c/class-chat");
 
-  const backToCodex = await send({ type: "activate-service", serviceId: "codex" });
-  assert.equal(backToCodex.kind, "navigated");
-  assert.equal(backToCodex.tabId, 42);
-  assert.equal(state.tabs[0].url, "https://chatgpt.com/codex/workspace-7");
+  const backToLovable = await send({ type: "activate-service", serviceId: "lovable" });
+  assert.equal(backToLovable.kind, "navigated");
+  assert.equal(backToLovable.tabId, 42);
+  assert.equal(state.tabs[0].url, "https://lovable.dev/projects/lesson");
+  assert.equal(state.tabs.length, 1);
+  assert.equal(state.created.length, 0);
+});
+
+test("old installations remove the retired Codex preset and its saved address", async () => {
+  const legacyServices = [
+    ...structuredClone(defaults).slice(0, 1),
+    { id: "codex", name: "Codex", url: "https://chatgpt.com/codex", kind: "codex", enabled: true, builtIn: true },
+    ...structuredClone(defaults).slice(1)
+  ];
+  const { state, send } = createHarness({
+    tabs: [{ id: 42, windowId: 1, url: "https://github.com/", active: true }],
+    storage: {
+      services: legacyServices,
+      serviceUrls: { codex: "https://chatgpt.com/codex/task-1", github: "https://github.com/" },
+      selectedServiceId: "codex"
+    }
+  });
+
+  const result = await send({ type: "get-state" });
+  assert.deepEqual(state.storage.services.map((service) => service.id), defaults.map((service) => service.id));
+  assert.equal("codex" in state.storage.serviceUrls, false);
+  assert.equal(state.storage.serviceUrls.github, "https://github.com/");
+  assert.equal(state.storage.selectedServiceId, "github");
+  assert.equal("codex" in result.statuses, false);
+});
+
+test("the retired Codex route is not reused as a ChatGPT work address", async () => {
+  const { state, send } = createHarness({ tabs: [
+    { id: 42, windowId: 1, url: "https://chatgpt.com/codex/task-1", active: true }
+  ] });
+
+  const before = await send({ type: "get-state" });
+  assert.equal(before.selectedServiceId, null);
+  assert.equal(state.storage.serviceUrls?.chatgpt, undefined);
+
+  const result = await send({ type: "activate-service", serviceId: "chatgpt" });
+  assert.equal(result.kind, "navigated");
+  assert.equal(state.tabs[0].url, "https://chatgpt.com/");
   assert.equal(state.tabs.length, 1);
   assert.equal(state.created.length, 0);
 });
@@ -173,7 +213,7 @@ test("service state shows current, remembered, and not-yet-visited tools", async
   const result = await send({ type: "get-state" });
   assert.equal(result.statuses.lovable.kind, "current");
   assert.equal(result.statuses.github.kind, "saved");
-  assert.equal(result.statuses.codex.kind, "ready");
+  assert.equal("codex" in result.statuses, false);
   assert.equal(result.selectedServiceId, "lovable");
 });
 
@@ -184,6 +224,7 @@ test("workspace UI has no iframe and does not create a tab for service selection
   assert.doesNotMatch(workerSource, /chrome\.tabs\.create\s*\(/);
   assert.doesNotMatch(workerSource, /chrome\.tabs\.reload\s*\(/);
   assert.doesNotMatch(workerSource, /chrome\.cookies|browser\.cookies/);
+  assert.doesNotMatch(sidepanelHtml, /Codex/);
   assert.match(sidepanelSource, /current tab|현재 탭/i);
 });
 
@@ -201,3 +242,4 @@ for (const item of cases) {
 
 console.log(`\n${cases.length - failures}/${cases.length} workspace checks passed`);
 if (failures > 0) process.exitCode = 1;
+

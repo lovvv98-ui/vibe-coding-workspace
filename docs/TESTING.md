@@ -4,17 +4,16 @@
 
 ## 자동 동작 확인
 
-저장소 루트에서 `node tests/extension-service-worker.test.mjs`를 실행합니다. 메뉴 순서, Manifest V3 설정, 한 탭에서의 ChatGPT/Codex 경로 전환, 서비스별 마지막 경로 저장, 같은 서비스 재선택 시 불필요한 이동 방지, 탭을 새로 만들지 않는 점을 확인합니다.
+저장소 루트에서 `node tests/extension-service-worker.test.mjs`를 실행합니다. 메뉴 순서와 Codex 제거 업데이트, Manifest V3 설정, 한 탭에서 서비스 전환, 서비스별 마지막 경로 저장, 같은 서비스 재선택 시 불필요한 이동 방지, 탭을 새로 만들지 않는 점을 확인합니다.
 
 ## 브라우저별 확인
 
 - [ ] 개발자 모드에서 `apps/extension` 폴더를 불러올 수 있음
 - [ ] Edge와 Chrome에서 사이드 패널이 열림
-- [ ] 메뉴 순서가 ChatGPT, Codex, Lovable, GitHub, Cursor, Vercel, InfinityFree임
-- [ ] ChatGPT 바로 아래 Codex가 표시됨
+- [ ] 메뉴 순서가 ChatGPT, Lovable, GitHub, Cursor, Vercel, InfinityFree임
+- [ ] 기존 설치의 Codex 메뉴와 저장된 Codex 주소가 업데이트 후 제거됨
 - [ ] 서비스 메뉴를 바꾸어도 서비스용 탭이 추가로 생기지 않음
 - [ ] 작업 화면이 같은 브라우저 탭에서 바뀜
-- [ ] ChatGPT와 Codex의 `/codex` 경로가 서로 섞이지 않음
 - [ ] 이전에 방문한 서비스로 돌아가면 마지막 경로가 다시 열림
 - [ ] 같은 서비스를 다시 눌러도 현재 화면이 새로 이동하지 않음
 - [ ] 서비스 사이트에 직접 로그인할 수 있고 로그인 세션이 유지됨
@@ -22,3 +21,4 @@
 - [ ] 사이드 패널을 연 상태로 서비스 전환이 가능한지 확인함
 
 Microsoft Edge는 탭을 오갈 때 사이드바를 다시 표시하지 않을 수 있습니다. 이 작업 방식은 서비스 전환에 탭을 바꾸지 않으므로 영향을 줄여 주지만, 브라우저에서 사이드 패널을 닫은 경우 확장 프로그램 아이콘으로 다시 열어야 합니다.
+
