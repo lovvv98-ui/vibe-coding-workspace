@@ -10,3 +10,62 @@
 @media(max-width:1050px){.workspace-shell{grid-template-columns:210px minmax(0,1fr)}.sidebar{padding-inline:13px}.page-content{padding-inline:28px}.tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.welcome-art{transform:scale(.85);transform-origin:right center;margin-right:-2px}}
 @media(max-width:760px){.workspace-shell{grid-template-columns:1fr}.sidebar{position:relative;height:auto;padding:13px 17px 10px;border-right:0;border-bottom:1px solid #eeeef4}.brand{padding:0 3px 12px}.sidebar-label,.side-nav,.sidebar-bottom{display:none}.tool-nav{display:flex;overflow-x:auto;padding:0 0 2px;gap:6px}.tool-nav-item{min-height:33px;padding:0 9px;gap:6px;border:1px solid #efedf5;border-radius:8px;white-space:nowrap;font-size:9px}.tiny-tool-icon{width:21px;height:21px;border-radius:6px}.topbar{height:52px;padding-inline:18px}.connection{display:none}.page-content{padding:22px 18px}.welcome-row{min-height:170px;padding:22px 23px}.welcome-art{width:170px;transform:scale(.72);margin-right:-18px}.welcome-row h1{font-size:26px}.section-note{max-width:170px;text-align:right;line-height:1.5}.focus-card{align-items:flex-start;flex-direction:column}.focus-actions{width:100%}.focus-launch,.focus-secondary{flex:1;text-align:center}.flow-grid{grid-template-columns:repeat(2,1fr)}.flow-heading{align-items:flex-start;flex-direction:column}.install-banner{align-items:flex-start;flex-wrap:wrap}.install-copy{flex-basis:calc(100% - 70px)}.install-actions{width:100%;grid-template-columns:1fr 1fr;align-items:center}.page-footer{flex-wrap:wrap}.page-footer span:nth-child(2){display:none}}
 @media(max-width:440px){.top-install{padding:9px 10px;font-size:8px}.breadcrumb{font-size:9px}.welcome-row{padding:19px 17px}.welcome-row h1{font-size:23px}.welcome-copy{max-width:245px;font-size:9px}.welcome-art{position:absolute;right:-43px;opacity:.35}.section-topline{align-items:flex-start;flex-direction:column}.section-note{max-width:none;text-align:left}.search-box{width:100%}.tool-grid{grid-template-columns:1fr 1fr;gap:8px}.tool-card{min-height:132px;padding:12px}.tool-card h3{margin-top:9px}.tool-card p{font-size:8px}.focus-detail{gap:10px}.focus-logo{width:43px;height:43px}.focus-text h3{font-size:14px}.focus-text p{font-size:8px}.flow-grid{gap:7px}.flow-item{padding:10px 8px}.class-flow{padding:17px 14px}.install-banner{padding:16px}.install-copy h2{font-size:11px}.install-copy p{font-size:8px}.install-actions{grid-template-columns:1fr}.page-footer{font-size:7px}}
+
+
+/* 7-tool classroom dashboard: clearer hierarchy and larger cards */
+.tools-section .tool-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:18px;
+}
+.tools-section .tool-card:first-child{
+  grid-column:1 / -1;
+  min-height:190px;
+  padding:24px 26px;
+}
+.tools-section .tool-card{
+  min-height:176px;
+  padding:21px 23px;
+  border-radius:16px;
+}
+.tools-section .tool-card-logo{
+  width:44px;height:44px;border-radius:13px;font-size:14px;
+}
+.tools-section .tool-card h3{margin:15px 0 6px;font-size:16px}
+.tools-section .tool-card p{font-size:12px;line-height:1.7}
+.tools-section .tool-card-bottom{padding-top:16px;font-size:10px}
+.tools-section .tool-open{font-size:11px}
+.section-topline h2,.flow-heading h2{font-size:20px}
+.section-kicker{font-size:10px}
+.section-note{font-size:11px}
+.search-box{width:230px;height:40px;padding:0 13px}
+.search-box input{font-size:12px}
+.focus-card{min-height:148px;padding:24px 27px;border-radius:16px}
+.focus-icon{width:52px;height:52px;font-size:25px}
+.focus-empty strong{font-size:14px}
+.focus-empty p{font-size:11px}
+.focus-logo{width:60px;height:60px;font-size:20px}
+.focus-text h3{font-size:19px}
+.focus-text p{font-size:11px}
+.focus-text .focus-overline{font-size:9px}
+.focus-launch,.focus-secondary{padding:13px 18px;font-size:11px}
+.welcome-row{min-height:225px;padding:36px 43px}
+.welcome-row h1{font-size:clamp(28px,3.2vw,39px)}
+.welcome-copy{font-size:12px}
+.welcome-kicker{font-size:10px}
+.class-flow{padding:26px}
+.flow-item{min-height:130px;padding:15px}
+.flow-item strong{font-size:12px}
+.flow-item p{font-size:10px}
+.install-banner{padding:25px 27px}
+.install-copy h2{font-size:16px}
+.install-copy p{font-size:11px}
+.download-button{font-size:11px;padding:13px 17px}
+.guide-link{font-size:10px}
+@media(max-width:760px){
+  .tools-section .tool-grid{grid-template-columns:1fr;gap:11px}
+  .tools-section .tool-card,.tools-section .tool-card:first-child{grid-column:auto;min-height:150px;padding:17px}
+  .tools-section .tool-card h3{font-size:14px}
+  .tools-section .tool-card p{font-size:10px}
+  .welcome-row{padding:25px}
+  .focus-card{padding:19px}
+}
