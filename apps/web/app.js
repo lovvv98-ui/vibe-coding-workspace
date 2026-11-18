@@ -61,6 +61,10 @@ async function init() {
     tools = (await response.json()).filter((tool) => tool.enabled !== false);
     if (!tools.length) throw new Error("등록된 도구가 없습니다.");
     selectedId = tools[0].id;
+    for (const id of ["nav-tool-count", "sidebar-tool-count", "heading-tool-count"]) {
+      const counter = document.getElementById(id);
+      if (counter) counter.textContent = String(tools.length).padStart(2, "0");
+    }
     renderNav();
     renderGrid();
     chooseTool(selectedId);

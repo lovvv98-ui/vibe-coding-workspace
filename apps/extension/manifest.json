@@ -10,7 +10,8 @@
     "https://github.com/*",
     "https://cursor.com/*",
     "https://vercel.com/*",
-    "https://dash.infinityfree.com/*"
+    "https://dash.infinityfree.com/*",
+    "https://supabase.com/*"
   ],
   "optional_host_permissions": ["https://*/*", "http://*/*"],
   "background": {
