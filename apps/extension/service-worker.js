@@ -12,12 +12,18 @@ async function getDefaults() {
 
 async function getServices() {
   const stored = await chrome.storage.local.get([SERVICES_KEY, SERVICE_URLS_KEY, SELECTED_KEY]);
-  const services = Array.isArray(stored[SERVICES_KEY]) ? stored[SERVICES_KEY] : await getDefaults();
+  const defaults = await getDefaults();
+  const services = Array.isArray(stored[SERVICES_KEY]) ? stored[SERVICES_KEY] : defaults;
   const currentServices = services.filter((service) => service?.id !== "codex" && service?.kind !== "codex");
+  const knownIds = new Set(currentServices.map((service) => service.id));
+  const newlyAdded = Array.isArray(stored[SERVICES_KEY])
+    ? defaults.filter((service) => service.builtIn && !knownIds.has(service.id))
+    : [];
+  const mergedServices = [...currentServices, ...newlyAdded];
   const updates = {};
 
-  if (Array.isArray(stored[SERVICES_KEY]) && currentServices.length !== services.length) {
-    updates[SERVICES_KEY] = currentServices;
+  if (!Array.isArray(stored[SERVICES_KEY]) || mergedServices.length !== services.length) {
+    updates[SERVICES_KEY] = mergedServices;
   }
 
   const savedUrls = stored[SERVICE_URLS_KEY];
@@ -29,7 +35,7 @@ async function getServices() {
 
   if (stored[SELECTED_KEY] === "codex") updates[SELECTED_KEY] = null;
   if (Object.keys(updates).length) await chrome.storage.local.set(updates);
-  return currentServices;
+  return mergedServices;
 }
 
 function parseWebUrl(url) {
