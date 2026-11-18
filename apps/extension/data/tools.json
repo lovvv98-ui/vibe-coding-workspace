@@ -64,6 +64,16 @@
     "kind": "domain",
     "enabled": true,
     "builtIn": true
+  },
+  {
+    "id": "supabase",
+    "name": "Supabase",
+    "url": "https://supabase.com/dashboard",
+    "description": "데이터베이스·인증·스토리지 관리",
+    "icon": "S",
+    "color": "#3ECF8E",
+    "kind": "domain",
+    "enabled": true,
+    "builtIn": true
   }
 ]
-
