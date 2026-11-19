@@ -14,6 +14,7 @@ await cp(join(source, "index.html"), join(output, "index.html"));
 await cp(join(source, "styles.css"), join(output, "styles.css"));
 await cp(join(source, "app.js"), join(output, "app.js"));
 await cp(join(source, "favicon.svg"), join(output, "favicon.svg"));
+await cp(join(root, "public", "materials"), join(output, "materials"), { recursive: true });
 await mkdir(join(output, "downloads"), { recursive: true });
 await cp(join(root, "docs"), join(output, "docs"), { recursive: true });
 await writeFile(join(output, "tools.json"), `${JSON.stringify(tools, null, 2)}\n`);
