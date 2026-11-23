@@ -19,5 +19,5 @@ await cp(join(root, "public", "materials"), join(output, "materials"), { recursi
 await mkdir(join(output, "downloads"), { recursive: true });
 await cp(uploadedArchive, downloadArchive);
 await cp(join(root, "docs"), join(output, "docs"), { recursive: true });
-await writeFile(join(output, "tools.json"), `${JSON.stringify(tools, null, 2)}\\n`);
+await writeFile(join(output, "tools.json"), JSON.stringify(tools, null, 2) + "\n");
 console.log(`웹 대시보드 준비 완료: ${output}`);
