@@ -6,7 +6,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const source = join(root, "apps", "web");
 const output = join(source, "dist");
 const tools = JSON.parse(await readFile(join(root, "shared", "tools.json"), "utf8"));
-const uploadedArchive = join(root, "public", "downloads", "VIBE-CODING-WORKSPACE-1.7.3.zip");
+const uploadedArchive = join(root, "public", "downloads", "VIBE-CODING-WORKSPACE-1.7.4.zip");
 const downloadArchive = join(output, "downloads", "vibe-coding-workspace-extension.zip");
 
 await rm(output, { recursive: true, force: true });
